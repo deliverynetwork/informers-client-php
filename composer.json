@@ -1,0 +1,10 @@
+{
+  "name": "deliverynetwork/informers-client-php",
+  "type": "package",
+  "stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "informers\\client\\": "src/"
+    }
+  }
+}
