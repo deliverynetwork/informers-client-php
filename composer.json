@@ -2,6 +2,7 @@
   "name": "deliverynetwork/informers-client-php",
   "type": "package",
   "version" : "1.0.0",
+  "license" : "ASL",
   "stability": "dev",
   "autoload": {
     "psr-4": {
