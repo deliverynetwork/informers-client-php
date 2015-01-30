@@ -1,7 +1,7 @@
 {
   "name": "deliverynetwork/informers-client-php",
   "type": "package",
-  "version" : "1.0.0",
+  "version" : "1.0.1",
   "license" : "ASL",
   "stability": "dev",
   "autoload": {
