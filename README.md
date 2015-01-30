@@ -66,3 +66,26 @@ try {
     echo $client->render($currentUrl); // rendering informer
 } catch (\informers\client\ClientException $e) { /* do something if needed */ } 
 ```
+
+### Usage with custom cache
+
+```php
+try {
+    $client = new \informers\client\Client(
+        array(
+            'site_id' => <YOUR_SITE_ID>,
+            'api_key' => '<YOUR_SITE_API_KEY>',
+            'api_url' => '<PLATFORM_API_URL>',
+            'cache'   => new \informers\client\CustomCache(
+                    function($key){
+                        return your_cache_get_function($key);
+                    },
+                    function($key, $value, $period){
+                        return your_cache_set_function($key, $value, $period);
+                    }, '<CACHE_PERIOD_IN_SECONDS>', '<CACHE_PREFIX>')
+        )
+    );
+    $currentUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; // current page URL    
+    echo $client->render($currentUrl); // rendering informer
+} catch (\informers\client\ClientException $e) { /* do something if needed */ }
+```
