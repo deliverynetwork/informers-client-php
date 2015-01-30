@@ -1,6 +1,7 @@
 {
   "name": "deliverynetwork/informers-client-php",
   "type": "package",
+  "version" : "1.0.0",
   "stability": "dev",
   "autoload": {
     "psr-4": {
