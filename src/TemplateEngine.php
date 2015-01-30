@@ -122,7 +122,8 @@ class TemplateEngine
     {
         if ($data[1] == 'follow') {
             return '<?php
-            if(empty( $params[\'' . $blockName . '\'][' . $key . ']["follow"] )) {
+            if( empty( $params[\'' . $blockName . '\']["follow"])
+                && empty( $params[\'' . $blockName . '\'][' . $key . ']["follow"] )) {
                 echo "rel=\"nofollow\"";
             }
             ?>';
