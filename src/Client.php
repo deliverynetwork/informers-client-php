@@ -15,10 +15,14 @@ class Client
     private $executionTime = 0.25;
     private $connectionTime = 0.1;
 
+    private static $startTime;
+
     /**
      * @var Cache
      */
     private $cache;
+
+    private static $trace = array();
 
     /**
      * @param $settings
@@ -26,6 +30,8 @@ class Client
      */
     public function __construct($settings)
     {
+        self::$startTime = microtime(true);
+
         if(empty($settings['site_id'])
             || empty($settings['api_key'])
             || empty($settings['api_url'])
@@ -134,6 +140,7 @@ class Client
         $params['sig'] = $this->signature($params);
         $queryString = http_build_query($params);
         $response = $this->execute($action . "?" . $queryString);
+        self::trace($action);
 
         return json_decode($response, true);
     }
@@ -170,6 +177,8 @@ class Client
             $send .= 'Content-Length: ' . strlen($data) . $endOfLine . $endOfLine;
 
             fwrite($fp, $send);
+
+            self::trace('write');
 
             $body = '';
             $header = '';
@@ -214,6 +223,24 @@ class Client
         }
 
         return md5(implode("", $toHash) . $this->apiKey);
+    }
+
+    /**
+     * Add message to trace array
+     * @param $message
+     */
+    public static function trace($message)
+    {
+        $time = round((microtime(true) - self::$startTime) * 1000);
+        self::$trace[] = $time . " " . $message;
+    }
+
+    /**
+     * @return array trace
+     */
+    public static function getTrace()
+    {
+        return self::$trace;
     }
 
 }
