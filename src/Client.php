@@ -140,9 +140,16 @@ class Client
         $params['sig'] = $this->signature($params);
         $queryString = http_build_query($params);
         $response = $this->execute($action . "?" . $queryString);
-        self::trace($action);
 
-        return json_decode($response, true);
+        self::trace("Get " . $action);
+
+        $result = json_decode($response, true);
+        if(!is_array($result)) {
+            $result = array();
+        }
+        $result['t'] = time();
+
+        return $result;
     }
 
 
@@ -178,7 +185,7 @@ class Client
 
             fwrite($fp, $send);
 
-            self::trace('write');
+            self::trace('Sending parameters');
 
             $body = '';
             $header = '';
@@ -232,7 +239,7 @@ class Client
     public static function trace($message)
     {
         $time = round((microtime(true) - self::$startTime) * 1000);
-        self::$trace[] = $time . " " . $message;
+        self::$trace[] = "Informers: " . $time . " " . $message;
     }
 
     /**
