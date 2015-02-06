@@ -10,6 +10,7 @@ class Client
 
     private $apiKey;
     private $apiUrl;
+    private $apiPort = 80;
     private $siteId;
 
     private $executionTime = 0.25;
@@ -45,6 +46,9 @@ class Client
         }
         if(isset($settings['api_max_execution_time'])) {
             $this->executionTime = $settings['api_max_execution_time'];
+        }
+        if(isset($settings['api_port'])) {
+            $this->apiPort = $settings['api_port'];
         }
 
         $this->siteId = $settings['site_id'];
@@ -141,7 +145,7 @@ class Client
         $queryString = http_build_query($params);
         $response = $this->execute($action . "?" . $queryString);
 
-        self::trace("Get " . $action);
+        self::trace("get " . $action);
 
         $result = json_decode($response, true);
         if(!is_array($result)) {
@@ -170,7 +174,7 @@ class Client
         $host = $parsed['host'];
         $path = $parsed['path'];
 
-        $fp = fsockopen($host, 80, $errNo, $errorMessage, $this->connectionTime);
+        $fp = @fsockopen($host, 80, $errNo, $errorMessage, $this->connectionTime);
         if (!$fp) {
             throw new ClientException("Connection error: " . $errorMessage);
         } else {
@@ -185,7 +189,7 @@ class Client
 
             fwrite($fp, $send);
 
-            self::trace('Sending parameters');
+            self::trace('send '. $url);
 
             $body = '';
             $header = '';
