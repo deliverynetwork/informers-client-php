@@ -174,7 +174,7 @@ class Client
         $host = $parsed['host'];
         $path = $parsed['path'];
 
-        $fp = @fsockopen($host, 80, $errNo, $errorMessage, $this->connectionTime);
+        $fp = @fsockopen($host, $this->apiPort, $errNo, $errorMessage, $this->connectionTime);
         if (!$fp) {
             throw new ClientException("Connection error: " . $errorMessage);
         } else {
