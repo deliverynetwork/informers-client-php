@@ -172,4 +172,18 @@ class TemplateEngine
         self::$usedBlocksNumbers = array();
     }
 
+    /**
+     * Count used blocks
+     * @param $blockName
+     * @return int
+     */
+    public function count($blockName)
+    {
+        if(isset(self::$usedBlocksNumbers[$blockName])) {
+            return self::$usedBlocksNumbers[$blockName];
+        }
+
+        return 0;
+    }
+
 }
