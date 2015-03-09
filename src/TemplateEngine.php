@@ -179,7 +179,7 @@ class TemplateEngine
     public function count($blockName)
     {
         if(isset(self::$usedBlocksNumbers[$blockName])) {
-            return self::$usedBlocksNumbers[$blockName];
+            return self::$usedBlocksNumbers[$blockName] + 1;
         }
 
         return 0;
