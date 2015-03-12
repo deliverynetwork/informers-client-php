@@ -93,17 +93,18 @@ class TemplateEngine
      * @param $blockName
      * @return mixed
      */
-    private function processBlock($template, $blockName)
+    public function processBlock($template, $blockName)
     {
 
         $key = self::$usedBlocksNumbers[$blockName] =
             isset(self::$usedBlocksNumbers[$blockName]) ? self::$usedBlocksNumbers[$blockName] + 1 : 0;
 
         $expr = '~{' . $blockName . '\.(\w+)}(.*?){\/' . $blockName . '\.(\w+)}~is';
-        return preg_replace_callback($expr, function ($data) use ($key, $blockName) {
+        $obj = $this;
+        return preg_replace_callback($expr, function ($data) use ($key, $blockName, $obj) {
 
             if ($data[1] == $data[3]) {
-                return $this->replace($data, $blockName, $key);
+                return $obj->replace($data, $blockName, $key);
             } else {
                 throw new ClientException('Process block error ' . serialize(array($data[1], $data[3])));
             }
@@ -118,7 +119,7 @@ class TemplateEngine
      * @param $key
      * @return string
      */
-    private function replace($data, $blockName, $key)
+    public function replace($data, $blockName, $key)
     {
         if ($data[1] == 'follow') {
             return '<?php
@@ -152,10 +153,11 @@ class TemplateEngine
     {
         $expr = '~{\$(\w+):begin}(.+?){\$(\w+):end}~is';
 
-        return preg_replace_callback($expr, function ($data) {
+        $obj = $this;
+        return preg_replace_callback($expr, function ($data) use($obj) {
             if ($data[1] == $data[3]) {
                 $blockName = $data[1];
-                return $this->processBlock($data[2], $blockName);
+                return $obj->processBlock($data[2], $blockName);
             } else {
                 throw new ClientException('Process blocks error ' . serialize(array($data[1], $data[3])));
             }

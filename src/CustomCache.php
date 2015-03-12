@@ -52,9 +52,9 @@ class CustomCache implements Cache
      */
     function get($key)
     {
-        return call_user_func_array($this->getCallback, [
+        return call_user_func_array($this->getCallback, array(
             $this->getKey($key),
-        ]);
+        ));
     }
 
     /**
@@ -65,11 +65,11 @@ class CustomCache implements Cache
      */
     function set($key, $value)
     {
-        return call_user_func_array($this->setCallback, [
+        return call_user_func_array($this->setCallback, array(
             $this->getKey($key),
             $value,
             $this->period,
-        ]);
+        ));
     }
 
     /**
