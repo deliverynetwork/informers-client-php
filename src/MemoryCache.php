@@ -7,12 +7,9 @@ require_once "Cache.php";
 
 class MemoryCache implements Cache
 {
-
-    const CACHE_PREFIX = 'informers';
-
     /**
      * Cache instance
-     * @var \Memcached
+     * @var \Memcache
      */
     private $cache;
 
@@ -26,7 +23,7 @@ class MemoryCache implements Cache
      * Cache prefix
      * @var string
      */
-    private $cachePrefix;
+    private $cachePrefix = 'informers';
 
 
     /**
@@ -40,10 +37,10 @@ class MemoryCache implements Cache
         $this->period = $period;
         $this->cachePrefix = $cachePrefix;
 
-        if($cache instanceof \Memcached) {
+        if($cache instanceof \Memcache) {
             $this->cache = $cache;
         } elseif(is_array($cache)) {
-            $this->cache = new \Memcached();
+            $this->cache = new \Memcache();
             $this->cache->addserver($cache['host'], $cache['port']);
         } else {
             throw new ClientException('Incorrect cache configuration');
@@ -55,7 +52,7 @@ class MemoryCache implements Cache
      */
     function get($key)
     {
-        return $this->cache->get($key);
+        return $this->cache->get($this->real($key));
     }
 
     /**
@@ -63,11 +60,16 @@ class MemoryCache implements Cache
      */
     function set($key, $value)
     {
-        return $this->cache->set($key, $value, time() + $this->period);
+        return $this->cache->set($this->real($key), $value, MEMCACHE_COMPRESSED, time() + $this->period);
     }
 
-    public function key($key)
+    /**
+     * Builds real cache key
+     * @param $key
+     * @return string
+     */
+    public function real($key)
     {
-        return self::CACHE_PREFIX . "_" .md5($key);
+        return $this->cachePrefix . "_" .$key;
     }
 }
